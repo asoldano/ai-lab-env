@@ -10,6 +10,11 @@ RUN useradd -m -u 1000 -s /bin/bash dev
 USER dev
 WORKDIR /workspaces
 
+ENV PATH="/home/dev/.local/bin:${PATH}"
+
+#Install Claude Code
+RUN curl -fsSL https://claude.ai/install.sh | bash
+
 # (Opzionale) installa qui tool CLI che NON richiedono secrets
 # Esempio: pip install --user ...
 

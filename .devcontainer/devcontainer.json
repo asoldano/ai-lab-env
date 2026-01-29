@@ -1,0 +1,22 @@
+{
+  "name": "ai-lab",
+  "build": {
+    "dockerfile": "Containerfile"
+  },
+  "workspaceFolder": "/workspaces",
+  "remoteUser": "dev",
+  "containerEnv": {
+    "PIP_DISABLE_PIP_VERSION_CHECK": "1"
+  },
+  "mounts": [
+    "source=ai-lab-cache,target=/var/ai-cache,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
+

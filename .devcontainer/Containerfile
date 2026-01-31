@@ -1,20 +1,37 @@
 FROM fedora:43
 
-RUN dnf -y update && \
-    dnf -y install git curl jq bash findutils procps-ng openssh-clients ca-certificates \
-                   python3 python3-pip nodejs npm && \
-    dnf clean all
+# Pacchetti base + Java dev
+RUN dnf -y install \
+      git \
+      curl \
+      jq \
+      bash \
+      findutils \
+      procps-ng \
+      openssh-clients \
+      ca-certificates \
+      python3 \
+      python3-pip \
+      nodejs \
+      npm \
+      java-21-openjdk-devel \
+      maven \
+      vim-minimal \
+      nano \
+      tar \
+      gzip \
+    && dnf clean all
 
 # Utente non-root
 RUN useradd -m -u 1000 -s /bin/bash dev
 USER dev
 WORKDIR /workspaces
 
+# PATH per install user-local
 ENV PATH="/home/dev/.local/bin:${PATH}"
 
-#Install Claude Code
-RUN curl -fsSL https://claude.ai/install.sh | bash
-
-# (Opzionale) installa qui tool CLI che NON richiedono secrets
-# Esempio: pip install --user ...
+# Install Claude Code (come user)
+RUN curl -fsSL https://claude.ai/install.sh -o /tmp/claude-install.sh \
+    && bash /tmp/claude-install.sh \
+    && rm -f /tmp/claude-install.sh
 

@@ -9,7 +9,8 @@
     "PIP_DISABLE_PIP_VERSION_CHECK": "1"
   },
   "mounts": [
-    "source=ai-lab-cache,target=/var/ai-cache,type=volume"
+    "source=ai-lab-cache,target=/var/ai-cache,type=volume",
+    "source=ai-lab-m2,target=/home/dev/.m2,type=volume"
   ],
   "customizations": {
     "vscode": {

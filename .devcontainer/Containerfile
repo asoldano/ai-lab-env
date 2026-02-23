@@ -22,6 +22,8 @@ RUN dnf -y install \
       gzip \
     && dnf clean all
 
+RUN npm install -g backlog.md
+
 # Utente non-root
 RUN useradd -m -u 1000 -s /bin/bash dev
 USER dev

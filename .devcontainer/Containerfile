@@ -20,6 +20,8 @@ RUN dnf -y install \
       nano \
       tar \
       gzip \
+      pipx \
+      uv \
     && dnf clean all
 
 RUN npm install -g backlog.md
@@ -32,8 +34,12 @@ WORKDIR /workspaces
 # PATH per install user-local
 ENV PATH="/home/dev/.local/bin:${PATH}"
 
-# Install Claude Code (come user)
+# Install Claude Code
 RUN curl -fsSL https://claude.ai/install.sh -o /tmp/claude-install.sh \
     && bash /tmp/claude-install.sh \
     && rm -f /tmp/claude-install.sh
 
+# Install SuperClaude (including relevant MCP servers)
+RUN pipx install superclaude
+RUN superclaude install
+RUN superclaude mcp --servers sequential-thinking --servers context7 --servers serena --servers playwright

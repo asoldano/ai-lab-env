@@ -1,5 +1,7 @@
 FROM fedora:43
 
+ARG MCP_ATLASSIAN_TAG=v0.21.0
+
 # Pacchetti base + Java dev
 RUN dnf -y install \
       git \
@@ -31,8 +33,8 @@ RUN useradd -m -u 1000 -s /bin/bash dev
 USER dev
 WORKDIR /workspaces
 
-# PATH per install user-local
 ENV PATH="/home/dev/.local/bin:${PATH}"
+ENV MCP_ATLASSIAN_TAG="${MCP_ATLASSIAN_TAG}"
 
 # Install Claude Code
 RUN curl -fsSL https://claude.ai/install.sh -o /tmp/claude-install.sh \
@@ -43,3 +45,8 @@ RUN curl -fsSL https://claude.ai/install.sh -o /tmp/claude-install.sh \
 RUN pipx install superclaude
 RUN superclaude install
 RUN superclaude mcp --servers sequential-thinking --servers context7 --servers serena --servers playwright
+
+# Bootstrap script for MCP Atlassian
+RUN mkdir -p /home/dev/.local/bin
+COPY --chown=dev:dev ./scripts/bootstrap-mcp-atlassian.sh /home/dev/.local/bin/bootstrap-mcp-atlassian
+RUN chmod +x /home/dev/.local/bin/bootstrap-mcp-atlassian

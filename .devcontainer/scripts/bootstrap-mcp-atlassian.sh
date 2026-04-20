@@ -28,7 +28,8 @@ claude mcp remove jira --scope user 2>/dev/null || true
 claude mcp add-json jira --scope user '{
   "command": "/home/dev/.local/share/mcp-atlassian/.venv/bin/mcp-atlassian",
   "env": {
-    "TOOLSETS": "all"
+    "TOOLSETS": "all",
+    "JIRA_PROJECTS_FILTER": "WFLY,EAP7,JBEAP,EAPDOC,EAPSUP,RESTEASY,JBERET,UNDERTOW,JBWS,JBTM,EJBCLIENT,WEJBHTTP,WFCORE"
   }
 }'
 

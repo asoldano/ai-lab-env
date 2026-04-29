@@ -47,6 +47,4 @@ RUN superclaude install
 RUN superclaude mcp --servers sequential-thinking --servers context7 --servers serena --servers playwright
 
 # Bootstrap script for MCP Atlassian
-RUN mkdir -p /home/dev/.local/bin
-COPY --chown=dev:dev ./scripts/bootstrap-mcp-atlassian.sh /home/dev/.local/bin/bootstrap-mcp-atlassian
-RUN chmod +x /home/dev/.local/bin/bootstrap-mcp-atlassian
+RUN claude mcp add --scope user --transport http atlassian https://mcp.atlassian.com/v1/mcp

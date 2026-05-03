@@ -1,7 +1,5 @@
 FROM fedora:43
 
-ARG MCP_ATLASSIAN_TAG=v0.21.0
-
 # Pacchetti base + Java dev
 RUN dnf -y install \
       git \
@@ -24,17 +22,26 @@ RUN dnf -y install \
       gzip \
       pipx \
       uv \
+      gcc \
+      portaudio-devel \
+      rsync \
     && dnf clean all
 
 RUN npm install -g backlog.md
 
 # Utente non-root
 RUN useradd -m -u 1000 -s /bin/bash dev
+RUN mkdir -p /run/user/1000 \
+    && chown dev:dev /run/user/1000 \
+    && chmod 700 /run/user/1000
+
 USER dev
+RUN mkdir -p /home/dev/.config
 WORKDIR /workspaces
 
-ENV PATH="/home/dev/.local/bin:${PATH}"
-ENV MCP_ATLASSIAN_TAG="${MCP_ATLASSIAN_TAG}"
+ENV PATH="/home/dev/.cargo/bin:/home/dev/.local/bin:${PATH}"
+ENV RUSTUP_HOME=/home/dev/.rustup
+ENV CARGO_HOME=/home/dev/.cargo
 
 # Install Claude Code
 RUN curl -fsSL https://claude.ai/install.sh -o /tmp/claude-install.sh \
@@ -48,3 +55,9 @@ RUN superclaude mcp --servers sequential-thinking --servers context7 --servers s
 
 # Bootstrap script for MCP Atlassian
 RUN claude mcp add --scope user --transport http atlassian https://mcp.atlassian.com/v1/mcp
+
+# Install zellij
+RUN mkdir -p /home/dev/.local/bin && curl -L https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz | tar xz && mv zellij /home/dev/.local/bin/ && chmod +x /home/dev/.local/bin/zellij
+
+# Install rustup
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | RUSTUP_INIT_SKIP_PATH_CHECK=yes sh -s -- -y --profile minimal
